@@ -12,10 +12,14 @@ import core.*;
 public class CalendarTest {
 	private Calendar calendar;
 	private User user;
+	private User user1; 
+	private GregorianCalendar date0 = new GregorianCalendar(2001,GregorianCalendar.JANUARY,1,10,30);
+	private GregorianCalendar date1 = new GregorianCalendar(2001,GregorianCalendar.JANUARY,2,9,00);
 	
 	@Before
 	public void before(){
 		user = new User();
+		user1 = new User();
 		calendar= user.createCalendar();
 		
 	}
@@ -37,22 +41,21 @@ public class CalendarTest {
 	
 	@Test
 	public void sholdHaveEvents(){
-		calendar.addEvent(new Event(),user);
-		assertEquals(calendar.getEvents(user).size(), 1);
+		calendar.addEvent(new Event("event0", date0, date1, true),user);
+		assertEquals(calendar.getAllEvents(user).size(), 1);
 	}
 	
 	@Test
 	public void shouldOnlyBeAccessableByOwner(){
 		try{
-			calendar.getEvents(user);
+			calendar.getAllEvents(user);
 		}
 		catch(AssertionError e){
 			assert false;
 		}
-		User user1 = new User();
 		boolean assertionErrorHappend = false;
 		try{
-			calendar.getEvents(user1);
+			calendar.getAllEvents(user1);
 		}
 		catch(AssertionError e){
 			assertionErrorHappend = true;
@@ -60,6 +63,13 @@ public class CalendarTest {
 		assert(assertionErrorHappend);
 	}
 	
+	@Test
+	public void allEventsShouldContainPublicEvents(){
+		calendar.addEvent(new Event("event0", date0, date1, true), user);
+		calendar.addEvent(new Event("event0", date0, date1, false), user);
+		assert calendar.getAllEvents(user).containsAll(calendar.getPublicEvents());
+		assertFalse( calendar.getPublicEvents().containsAll(calendar.getAllEvents(user)) );
+	}
 	
 	
 	@Test
