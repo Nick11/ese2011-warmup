@@ -121,7 +121,7 @@ public class CalendarTest {
 	@Test
 	public void shouldIterate(){
 		Event event0 = new Event("event0", date0, date1, false);
-		Event event1 = new Event("event1", date1, date2, true);
+		Event event1 = new Event("event1", date1, date1, true);
 		Event event2 = new Event("event2", date1, date3, false);
 		Event event3 = new Event("event3", date3, date3, true);
 		calendar.addEvent(event0, user);
